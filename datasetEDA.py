@@ -16,12 +16,11 @@ print(heart_data.columns)
 print(heart_data.nunique())
 print(heart_data.info())
 
-# age corrolation to heart disease
-figure = plt.figure(figsize= (30, 30))
-ax = figure.gca()
-
-heart_data.hist(ax=ax, bins = 100, color = "purple")
-
+heart_data.plot(kind='box', subplots=True, layout=(3,5), figsize=(30, 10), color='blue')
 plt.show()
+# age corrolation to heart disease frequency
+ages = heart_data["Age"]
+
+
 # gender corrolation to heart disease
 
