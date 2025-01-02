@@ -12,7 +12,7 @@ print(heart_data.shape)
 
 
 print(heart_data.columns)
-# unique values
+# unique values fsf
 print(heart_data.nunique())
 print(heart_data.info())
 
