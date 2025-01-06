@@ -2,15 +2,16 @@ import pandas as pd
 import numpy as np
 import sklearn as sk
 import matplotlib as mp
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
-import xgboost as xgb
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
-
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
 
 
 heart_disease_data = pd.read_csv("heart_disease.csv")
@@ -26,7 +27,6 @@ heart_disease_data.pop("Fasting Blood Sugar")
 heart_disease_data.pop("CRP Level")
 heart_disease_data.pop("Homocysteine Level")
 
-print(heart_disease_data)
 
 # PDA
 # - Age
@@ -57,41 +57,54 @@ stress = le.fit_transform(list(heart_disease_data['Stress Level']))
 sleep = le.fit_transform(list(heart_disease_data['Sleep Hours']))
 sugar = le.fit_transform(list(heart_disease_data['Sugar Consumption']))
 heart_disease = le.fit_transform(list(heart_disease_data['Heart Disease Status']))
+# two possibilities yes and no
 
 
 
 # Split data into features and target
-X = list(zip(age, gender, exercise, smoking, family, diabetes, bmi, alcohol, stress, sleep, sugar))
+x = list(zip(age, gender, exercise, smoking, family, diabetes, bmi, alcohol, stress, sleep, sugar))
 y = list(heart_disease)
 
+num_folds = 5
+seed = 7
+
+scoring = "accuracy"
+
 # Split data into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=seed)
 
 
 predictive_models = []
-# Initialize models
-nb = GaussianNB()
-svc = SVC()
-gbc = GradientBoostingClassifier()
-rfc = RandomForestClassifier()
-dt = DecisionTreeClassifier()
-xgb_model = xgb.XGBClassifier()
 
-model_result = []
+# Initialize and add models to hashmap of all models
+predictive_models.append(("NB", GaussianNB()))
+predictive_models.append(("SVM", SVC()))
+predictive_models.append(("GBM", GradientBoostingClassifier()))
+predictive_models.append(("RF", RandomForestClassifier()))
+predictive_models.append(("DTC", DecisionTreeClassifier()))
+
+model_results = []
 model_names = []
 
-nb.fit(X_train, y_train)
-nb_preds = nb.predict(X_test)
-nb_acc = accuracy_score(y_test, nb_preds)
+# determining best model
+print("Performance on Training set")
 
-nb.fit(X_train, y_train)
-nb_preds = nb.predict(X_test)
-nb_acc = accuracy_score(y_test, nb_preds)
+# go through model list and use each one
+for name, model in predictive_models:
+    kfold = KFold(n_splits=num_folds,shuffle=True,random_state=seed)
+    cv_results = cross_val_score(model, x_train, y_train, cv=kfold, scoring="accuracy")
+    # adding model name and accuracy to lists
+    model_results.append(cv_results)
+    model_names.append(name)
+    # outputing results of model
+    print(f"{name}: {cv_results.mean():,.6f} ({cv_results.std():,.6f})\n")
 
-nb.fit(X_train, y_train)
-nb_preds = nb.predict(X_test)
-nb_acc = accuracy_score(y_test, nb_preds)
+# bar graph comparison of models
+fig = plt.figure()
+fig.suptitle("Predictive Algorithm Comparison")
+ax = fig.add_subplot(111)
+plt.boxplot(model_results)
+ax.set_xticklabels(model_names)
+plt.show()
 
-nb.fit(X_train, y_train)
-nb_preds = nb.predict(X_test)
-nb_acc = accuracy_score(y_test, nb_preds)
+
