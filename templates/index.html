@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Heart Disease Predictor</title>
+    <link rel="stylesheet" href="/styles/style.css">
+  </head>
+  <body>
+
+    'Age': age, 
+    'Gender' : gender, 
+    'Exercise Habits' : exercise_habits,
+    'Smoking' : smoking, 
+    'Family Heart Disease' : family_heart_disease,
+    'Diabetes' : diabetes,
+    'BMI' : bmi,
+    'High Blood Pressure' : high_blood_pressure,
+    'Alcohol Consumption' : alcohol_consumption,
+    'Stress Level' : stress_level,
+    'Sleep Hours' : sleep_hours,
+    'Sugar Consumption': sugar_consumption
+
+    <h1>Heart Disease Predictor</h1>
+    <form action="/predict" method="POST">
+      <label for="Age">Age:</label>
+      <input type="number" step="any" id="Age" name="Age" required>
+
+      <label for="Gender">gender:</label>
+      <input type="text" step="any" id="Gender" name="Gender" required>
+
+      <label for="Exercise Habits">Exercise Habits:</label>
+      <input type="text" step="any" id="Exercise Habits" name="Exercise Habits" required>
+
+      <label for="Smoking">Smoking:</label>
+      <input type="text" step="any" id="Smoking" name="Smoking" required>
+
+      <label for="Family Heart Disease">Family Heart Disease:</label>
+      <input type="text" step="any" id="Family Heart Disease" name="Family Heart Disease" required>
+
+      <label for="Diabetes">Diabetes:</label>
+      <input type="text" step="any" id="Diabetes" name="Diabetes" required>
+
+      <label for="BMI">Body Mass Index (BMI):</label>
+      <input type="number" step="any" id="BMI" name="BMI" required>
+
+      <label for="High Blood Pressure">High Blood Pressure:</label>
+      <input type="text" step="any" id="High Blood Pressure" name="High Blood Pressure" required>
+
+      <label for="Alcohol Consumption">Alcohol Consumption:</label>
+      <input type="text" step="any" id="Alcohol Consumption" name="Alcohol Consumption" required>
+
+      <label for="Stress Level">Stress Level:</label>
+      <input type="text" step="any" id="Stress Level" name="Stress Level" required>
+
+      <label for="Sleep Hours">Sleep Hours:</label>
+      <input type="number" step="any" id="Sleep Hours" name="Sleep Hours" required>
+
+      <label for="Sugar Consumption">Sugar Consumption:</label>
+      <input type="text" step="any" id="Sugar Consumption" name="Sugar Consumption" required>
+      
+      <br><br>
+      <input type="submit" value="Predict">
+      <p id='prediction'>{{ prediction }}</p>
+    </form>
+    <img src="/img/heart.webp" alt="heart image" style="height: 100px; width: 100px;">
+  </body>
+</html>
