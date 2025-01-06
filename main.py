@@ -12,6 +12,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import pickle
+
 
 
 heart_disease_data = pd.read_csv("heart_disease.csv")
@@ -83,28 +86,49 @@ predictive_models.append(("GBM", GradientBoostingClassifier()))
 predictive_models.append(("RF", RandomForestClassifier()))
 predictive_models.append(("DTC", DecisionTreeClassifier()))
 
+
 model_results = []
 model_names = []
 
 # determining best model
-print("Performance on Training set")
+# print("Performance on Training set")
 
-# go through model list and use each one
-for name, model in predictive_models:
-    kfold = KFold(n_splits=num_folds,shuffle=True,random_state=seed)
-    cv_results = cross_val_score(model, x_train, y_train, cv=kfold, scoring="accuracy")
-    # adding model name and accuracy to lists
-    model_results.append(cv_results)
-    model_names.append(name)
-    # outputing results of model
-    print(f"{name}: {cv_results.mean():,.6f} ({cv_results.std():,.6f})\n")
+# # go through model list and use each one
+# for name, model in predictive_models:
+#     kfold = KFold(n_splits=num_folds,shuffle=True,random_state=seed)
+#     cv_results = cross_val_score(model, x_train, y_train, cv=kfold, scoring="accuracy")
+#     # adding model name and accuracy to lists
+#     model_results.append(cv_results)
+#     model_names.append(name)
+#     # outputing results of model
+#     print(f"{name}: {cv_results.mean():,.6f} ({cv_results.std():,.6f})\n")
 
-# bar graph comparison of models
-fig = plt.figure()
-fig.suptitle("Predictive Algorithm Comparison")
-ax = fig.add_subplot(111)
-plt.boxplot(model_results)
-ax.set_xticklabels(model_names)
+# # bar graph comparison of models
+# fig = plt.figure()
+# fig.suptitle("Predictive Algorithm Comparison")
+# ax = fig.add_subplot(111)
+# plt.boxplot(model_results)
+# ax.set_xticklabels(model_names)
+# plt.show()
+
+# SVM is best model
+predictive_models.append(("SVM", SVC))
+svm = SVC()
+best_model = svm
+best_model.fit(x_train, y_train)
+y_pred = best_model.predict(x_test)
+print(f"Best Model Accuracy Score on Test Set: {accuracy_score(y_test, y_pred)}")
+print(y_pred)
+
+
+print(classification_report(y_test, y_pred))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
 plt.show()
 
-
+# Save the data to use in the software tool
+with open('best_model.pkl', 'wb') as f:
+    pickle.dump(svm, f)
