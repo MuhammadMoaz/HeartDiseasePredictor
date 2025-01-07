@@ -14,23 +14,38 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     heart_disease_dict = {
-        0: 'no',
-        1: 'yes'
+        0: 'No',
+        1: 'Yes'
     }
 
-    #Get Values
-    age = request.form['Age']
-    gender = request.form['Gender']
-    exercise_habits = request.form['Exercise Habits']
-    smoking = request.form['Smoking']
-    family_heart_disease = request.form['Family Heart Disease']
-    diabetes = request.form['Diabetes']
-    bmi = request.form['BMI']
-    high_blood_pressure = request.form['High Blood Pressure']
-    alcohol_consumption = request.form['Alcohol Consumption']
-    stress_level = request.form['Stress Level']
-    sleep_hours = request.form['Sleep Hours']
-    sugar_consumption = request.form['Sugar Consumption']
+    levels_dict = {
+        'Low': 1,
+        'Medium': 2,
+        'High': 0
+    }
+
+    gender_dict = {
+        'Male': 1,
+        'Female': 0 
+    }
+    desc_dict = {
+        'Yes':1,
+        'No': 0
+    }
+
+    # Get Values
+    age = float(request.form['Age'])
+    gender = gender_dict[request.form['Gender']]
+    exercise_habits = levels_dict[request.form['Exercise Habits']]
+    smoking = desc_dict[request.form['Smoking']]
+    family_heart_disease = desc_dict[request.form['Family Heart Disease']]
+    diabetes = desc_dict[request.form['Diabetes']]
+    bmi = float(request.form['BMI'])
+    high_blood_pressure = desc_dict[request.form['High Blood Pressure']]
+    alcohol_consumption = levels_dict[request.form['Alcohol Consumption']]
+    stress_level = levels_dict[request.form['Stress Level']]
+    sleep_hours = float(request.form['Sleep Hours'])
+    sugar_consumption = levels_dict[request.form['Sugar Consumption']]
     
     data = pd.DataFrame({'Age': age, 
                          'Gender' : gender, 
@@ -43,7 +58,7 @@ def predict():
                          'Alcohol Consumption' : alcohol_consumption,
                          'Stress Level' : stress_level,
                          'Sleep Hours' : sleep_hours,
-                         'Sugar Consumption': sugar_consumption}, index=[0])
+                         'Sugar Consumption': sugar_consumption})
 
     prediction = f"Heart Disease Status: {heart_disease_dict[model.predict(data)][0]}"
 

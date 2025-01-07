@@ -31,6 +31,7 @@ heart_disease_data.pop("CRP Level")
 heart_disease_data.pop("Homocysteine Level")
 
 
+
 # PDA
 # - Age
 # - Gender
@@ -45,6 +46,7 @@ heart_disease_data.pop("Homocysteine Level")
 # - Sleep Hours
 # - Sugar Consumption
 
+
 # Encode categorical variables
 le = LabelEncoder() 
 ID = le.fit_transform(list(heart_disease_data['ID']))
@@ -55,6 +57,7 @@ smoking = le.fit_transform(list(heart_disease_data['Smoking']))
 family = le.fit_transform(list(heart_disease_data['Family Heart Disease']))
 diabetes = le.fit_transform(list(heart_disease_data['Diabetes']))
 bmi = le.fit_transform(list(heart_disease_data['BMI']))
+hbp = le.fit_transform(list(heart_disease_data['High Blood Pressure']))
 alcohol = le.fit_transform(list(heart_disease_data['Alcohol Consumption']))
 stress = le.fit_transform(list(heart_disease_data['Stress Level']))
 sleep = le.fit_transform(list(heart_disease_data['Sleep Hours']))
@@ -62,10 +65,15 @@ sugar = le.fit_transform(list(heart_disease_data['Sugar Consumption']))
 heart_disease = le.fit_transform(list(heart_disease_data['Heart Disease Status']))
 # two possibilities yes and no
 
+# high = 0, low = 1, med = 2
+print(hbp[0])
+print(hbp[1])
+print(hbp[2])
+print(hbp[3])
 
 
 # Split data into features and target
-x = list(zip(age, gender, exercise, smoking, family, diabetes, bmi, alcohol, stress, sleep, sugar))
+x = list(zip(age, gender, exercise, smoking, family, diabetes, bmi, hbp, alcohol, stress, sleep, sugar))
 y = list(heart_disease)
 
 num_folds = 5
@@ -91,25 +99,25 @@ model_results = []
 model_names = []
 
 # determining best model
-# print("Performance on Training set")
+print("Performance on Training set")
 
-# # go through model list and use each one
-# for name, model in predictive_models:
-#     kfold = KFold(n_splits=num_folds,shuffle=True,random_state=seed)
-#     cv_results = cross_val_score(model, x_train, y_train, cv=kfold, scoring="accuracy")
-#     # adding model name and accuracy to lists
-#     model_results.append(cv_results)
-#     model_names.append(name)
-#     # outputing results of model
-#     print(f"{name}: {cv_results.mean():,.6f} ({cv_results.std():,.6f})\n")
+# go through model list and use each one
+for name, model in predictive_models:
+    kfold = KFold(n_splits=num_folds,shuffle=True,random_state=seed)
+    cv_results = cross_val_score(model, x_train, y_train, cv=kfold, scoring="accuracy")
+    # adding model name and accuracy to lists
+    model_results.append(cv_results)
+    model_names.append(name)
+    # outputing results of model
+    print(f"{name}: {cv_results.mean():,.6f} ({cv_results.std():,.6f})\n")
 
-# # bar graph comparison of models
-# fig = plt.figure()
-# fig.suptitle("Predictive Algorithm Comparison")
-# ax = fig.add_subplot(111)
-# plt.boxplot(model_results)
-# ax.set_xticklabels(model_names)
-# plt.show()
+# bar graph comparison of models
+fig = plt.figure()
+fig.suptitle("Predictive Algorithm Comparison")
+ax = fig.add_subplot(111)
+plt.boxplot(model_results)
+ax.set_xticklabels(model_names)
+plt.show()
 
 # SVM is best model
 predictive_models.append(("SVM", SVC))
