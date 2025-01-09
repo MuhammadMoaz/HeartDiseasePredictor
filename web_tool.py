@@ -47,20 +47,20 @@ def predict():
     sleep_hours = float(request.form['Sleep Hours'])
     sugar_consumption = levels_dict[request.form['Sugar Consumption']]
     
-    data = pd.DataFrame({'Age': age, 
-                         'Gender' : gender, 
-                         'Exercise Habits' : exercise_habits,
-                         'Smoking' : smoking, 
-                         'Family Heart Disease' : family_heart_disease,
-                         'Diabetes' : diabetes,
-                         'BMI' : bmi,
-                         'High Blood Pressure' : high_blood_pressure,
-                         'Alcohol Consumption' : alcohol_consumption,
-                         'Stress Level' : stress_level,
-                         'Sleep Hours' : sleep_hours,
-                         'Sugar Consumption': sugar_consumption})
+    data = pd.DataFrame({'Age': [age], 
+                         'Gender' : [gender], 
+                         'Exercise Habits' : [exercise_habits],
+                         'Smoking' : [smoking], 
+                         'Family Heart Disease' : [family_heart_disease],
+                         'Diabetes' : [diabetes],
+                         'BMI' : [bmi],
+                         'High Blood Pressure' : [high_blood_pressure],
+                         'Alcohol Consumption' : [alcohol_consumption],
+                         'Stress Level' : [stress_level],
+                         'Sleep Hours' : [sleep_hours],
+                         'Sugar Consumption': [sugar_consumption]})
 
-    prediction = f"Heart Disease Status: {heart_disease_dict[model.predict(data)][0]}"
+    prediction = f"Heart Disease Status: {model.predict(data)}"
 
     return render_template('index.html', prediction=prediction)
 
