@@ -29,6 +29,9 @@ heart_disease_data.pop("Fasting Blood Sugar")
 heart_disease_data.pop("CRP Level")
 heart_disease_data.pop("Homocysteine Level")
 
+# Drop rows with missing values
+heart_disease_data = heart_disease_data.dropna()
+
 
 # PDA
 # - Age
@@ -61,6 +64,7 @@ stress = le.fit_transform(list(heart_disease_data['Stress Level']))
 sleep = le.fit_transform(list(heart_disease_data['Sleep Hours']))
 sugar = le.fit_transform(list(heart_disease_data['Sugar Consumption']))
 heart_disease = le.fit_transform(list(heart_disease_data['Heart Disease Status']))
+
 # two possibilities yes and no
 
 # high = 0, low = 1, med = 2

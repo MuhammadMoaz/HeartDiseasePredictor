@@ -29,7 +29,7 @@ def predict():
         'Female': 0 
     }
     desc_dict = {
-        'Yes':1,
+        'Yes': 1,
         'No': 0
     }
 

@@ -18,14 +18,6 @@ print(heart_data.columns)
 print(heart_data.nunique())
 print(heart_data.info())
 
-# Data Transformation
-print(heart_data['Gender'].unique())
-heart_data['Gender'] = heart_data['Gender'].replace(['Female', 'Male'], [0, 1])
-print(heart_data['Gender'].unique())
-
-print(heart_data['Exercise Habits'].unique())
-heart_data['Exercise Habits'] = heart_data['Exercise Habits'].replace(['High', 'Low', 'Medium'], [3, 1, 2])
-print(heart_data['Exercise Habits'].unique())
 
 heart_data.plot(kind='box', subplots=True, layout=(3,5), figsize=(30, 10), color='blue')
 plt.show()
