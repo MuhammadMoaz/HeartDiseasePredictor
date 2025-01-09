@@ -29,6 +29,7 @@ print(heart_data['Exercise Habits'].unique())
 
 heart_data.plot(kind='box', subplots=True, layout=(3,5), figsize=(30, 10), color='blue')
 plt.show()
+
 # age corrolation to heart disease frequency
 ages = heart_data["Age"]
 

@@ -16,7 +16,6 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import pickle
 
 
-
 heart_disease_data = pd.read_csv("heart_disease.csv")
 
 predict = "Heart Disease Status"
@@ -29,7 +28,6 @@ heart_disease_data.pop("Triglyceride Level")
 heart_disease_data.pop("Fasting Blood Sugar")
 heart_disease_data.pop("CRP Level")
 heart_disease_data.pop("Homocysteine Level")
-
 
 
 # PDA
