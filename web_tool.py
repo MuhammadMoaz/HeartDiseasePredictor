@@ -22,10 +22,6 @@ def calc_bmi():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    heart_disease_dict = {
-        0: 'No',
-        1: 'Yes'
-    }
 
     levels_dict = {
         'Low': 1,
@@ -43,33 +39,51 @@ def predict():
     }
 
     # Get Values
-    age = float(request.form['Age'])
-    gender = gender_dict[request.form['Gender']]
-    exercise_habits = levels_dict[request.form['Exercise Habits']]
-    smoking = desc_dict[request.form['Smoking']]
-    family_heart_disease = desc_dict[request.form['Family Heart Disease']]
-    diabetes = desc_dict[request.form['Diabetes']]
-    bmi = float(request.form['BMI'])
-    high_blood_pressure = desc_dict[request.form['High Blood Pressure']]
-    alcohol_consumption = levels_dict[request.form['Alcohol Consumption']]
-    stress_level = levels_dict[request.form['Stress Level']]
-    sleep_hours = float(request.form['Sleep Hours'])
-    sugar_consumption = levels_dict[request.form['Sugar Consumption']]
-    
-    data = pd.DataFrame({'Age': [age], 
-                         'Gender' : [gender], 
-                         'Exercise Habits' : [exercise_habits],
-                         'Smoking' : [smoking], 
-                         'Family Heart Disease' : [family_heart_disease],
-                         'Diabetes' : [diabetes],
-                         'BMI' : [bmi],
-                         'High Blood Pressure' : [high_blood_pressure],
-                         'Alcohol Consumption' : [alcohol_consumption],
-                         'Stress Level' : [stress_level],
-                         'Sleep Hours' : [sleep_hours],
-                         'Sugar Consumption': [sugar_consumption]})
+    age = request.form['Age']
+    gender = request.form['Gender']
+    exercise = request.form['Exercise Habits']
+    smoking = request.form['Smoking']
+    fhd = request.form['Family Heart Disease']
+    diabetes = request.form['Diabetes']
+    bmi = request.form['BMI']
+    hbp = request.form['High Blood Pressure']
+    alcohol = request.form['Alcohol Consumption']
+    stress = request.form['Stress Level']
+    sleep = request.form['Sleep Hours']
+    sugar = request.form['Sugar Consumption']
 
-    prediction = f"Heart Disease Status: {model.predict(data)}"
+    gender = gender_dict[gender]
+
+    smoking = desc_dict[smoking]
+    fhd = desc_dict[fhd]
+    diabetes = desc_dict[diabetes]
+    hbp = desc_dict[hbp]
+
+
+    exercise = levels_dict[exercise]
+    alcohol = levels_dict[alcohol]
+    stress = levels_dict[stress]
+    sugar = levels_dict[sugar]
+    
+    data = pd.DataFrame({'Age': age, 
+                         'Gender': gender, 
+                         'Exercise Habits': exercise,
+                         'Smoking': smoking, 
+                         'Family Heart Disease': fhd,
+                         'Diabetes': diabetes,
+                         'BMI': bmi,
+                         'High Blood Pressure': hbp,
+                         'Alcohol Consumption': alcohol,
+                         'Stress Level': stress,
+                         'Sleep Hours': sleep,
+                         'Sugar Consumption': sugar}, index=[0])
+
+    prediction = f"Heart Disease Status: {model.predict(data)[0]}"
+
+    if prediction == 1:
+            prediction = "true"
+    else:
+        prediction = "false"
 
     return render_template('index.html', prediction=prediction)
 
