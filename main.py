@@ -32,7 +32,6 @@ heart_disease_data.pop("Homocysteine Level")
 # Drop rows with missing values
 heart_disease_data = heart_disease_data.dropna()
 
-
 # PDA
 # - Age
 # - Gender
@@ -138,6 +137,48 @@ cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 plt.show()
+
+# levels_dict = {
+#         'Low': 1,
+#         'Medium': 2,
+#         'High': 0
+#     }
+
+# gender_dict = {
+#         'Male': 1,
+#         'Female': 0 
+#     }
+# desc_dict = {
+#         'Yes': 1,
+#         'No': 0
+#     }
+
+
+# age = 
+# gender = 
+# exercise = 
+# smoking = 
+# fhd =
+# diabetes = 
+# bmi = 
+# hbp = 
+# alcohol =
+# stress =
+# sleep =
+# sugar = 
+
+# gender = gender_dict[gender]
+
+# smoking = desc_dict[smoking]
+# fhd = desc_dict[fhd]
+# diabetes = desc_dict[diabetes]
+# hbp = desc_dict[hbp]
+
+
+# exercise = levels_dict[exercise]
+# alcohol = levels_dict[alcohol]
+# stress = levels_dict[stress]
+# sugar = levels_dict[sugar]
 
 # Save the data to use in the software tool
 with open('best_model.pkl', 'wb') as f:
