@@ -11,6 +11,15 @@ model = pickle.load(open('best_model.pkl', 'rb'))
 def home():
     return render_template('index.html')
 
+@app.route('/bmi', methods=['POST'])
+def calc_bmi():
+    weight = float(request.form['Weight'])
+    height = float(request.form['Height'])
+
+    bmi = weight / (height ** 2)
+    
+    return render_template('index.html', bmi=f"BMI: {bmi}")
+
 @app.route('/predict', methods=['POST'])
 def predict():
     heart_disease_dict = {
