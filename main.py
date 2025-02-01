@@ -13,72 +13,58 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import pickle
 
 
-heart_disease_data = pd.read_csv("heart_disease.csv")
+heart_disease_data = pd.read_csv("HeartDiseasePredictor\heart.csv")
 
-predict = "Heart Disease Status"
-
-heart_disease_data.pop("Cholesterol Level")
-heart_disease_data.pop("Blood Pressure")
-heart_disease_data.pop("Low HDL Cholesterol")
-heart_disease_data.pop("High LDL Cholesterol")
-heart_disease_data.pop("Triglyceride Level")
-heart_disease_data.pop("Fasting Blood Sugar")
-heart_disease_data.pop("CRP Level")
-heart_disease_data.pop("Homocysteine Level")
+predict = "hd"
 
 # Drop rows with missing values
 heart_disease_data = heart_disease_data.dropna()
 
 # PDA
-# - Age
-# - Gender
-# - Exercise Habits
-# - Smoking
-# - Family Heart Disease
-# - Diabetes
-# - BMI
-# - High Blood Pressure [Optional]
-# - Alcohol Consumption
-# - Stress Level
-# - Sleep Hours
-# - Sugar Consumption
+# - age
+# - sex
+# - cp
+# - trestbps
+# - chol
+# - fbs
+# - restecg
+# - thalach
+# - exang
+# - oldpeak
+# - slope
+# - ca
+# - thal
+# - hd
 
 
 # Encode categorical variables
 le = LabelEncoder() 
-ID = le.fit_transform(list(heart_disease_data['ID']))
-age = le.fit_transform(list(heart_disease_data['Age']))
-gender = le.fit_transform(list(heart_disease_data['Gender']))
-exercise = le.fit_transform(list(heart_disease_data['Exercise Habits']))
-smoking = le.fit_transform(list(heart_disease_data['Smoking']))
-family = le.fit_transform(list(heart_disease_data['Family Heart Disease']))
-diabetes = le.fit_transform(list(heart_disease_data['Diabetes']))
-bmi = le.fit_transform(list(heart_disease_data['BMI']))
-hbp = le.fit_transform(list(heart_disease_data['High Blood Pressure']))
-alcohol = le.fit_transform(list(heart_disease_data['Alcohol Consumption']))
-stress = le.fit_transform(list(heart_disease_data['Stress Level']))
-sleep = le.fit_transform(list(heart_disease_data['Sleep Hours']))
-sugar = le.fit_transform(list(heart_disease_data['Sugar Consumption']))
-heart_disease = le.fit_transform(list(heart_disease_data['Heart Disease Status']))
+age = le.fit_transform(list(heart_disease_data['age']))
+sex = le.fit_transform(list(heart_disease_data['sex']))
+cp = le.fit_transform(list(heart_disease_data['cp']))
+trestbps = le.fit_transform(list(heart_disease_data['trestbps']))
+chol = le.fit_transform(list(heart_disease_data['chol']))
+fbs = le.fit_transform(list(heart_disease_data['fbs']))
+restecg = le.fit_transform(list(heart_disease_data['restecg']))
+thalach = le.fit_transform(list(heart_disease_data['thalach'])) # heart defect thalacemia
+exang = le.fit_transform(list(heart_disease_data['exang'])) # exercise induced angina
+oldpeak = le.fit_transform(list(heart_disease_data['oldpeak']))
+slope = le.fit_transform(list(heart_disease_data['slope']))
+ca = le.fit_transform(list(heart_disease_data['ca']))
+thal = le.fit_transform(list(heart_disease_data['thal']))
+hd = le.fit_transform(list(heart_disease_data['hd']))
+# two possibilities 1, 0 or yes and no
 
-# two possibilities yes and no
-
-# high = 0, low = 1, med = 2
-print(hbp[0])
-print(hbp[1])
-print(hbp[2])
-print(hbp[3])
 
 
 # Split data into features and target
-x = list(zip(age, gender, exercise, smoking, family, diabetes, bmi, hbp, alcohol, stress, sleep, sugar))
-y = list(heart_disease)
+x = list(zip(age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)) # add vals
+y = list(hd)
 
 num_folds = 5
-seed = 7
+seed = 42
 
 scoring = "accuracy"
 
@@ -120,13 +106,14 @@ plt.boxplot(model_results)
 ax.set_xticklabels(model_names)
 plt.show()
 
-# SVM is best model
-predictive_models.append(("SVM", SVC))
-svm = SVC()
-best_model = svm
+# RF is best model
+predictive_models.append(("RF", RandomForestClassifier))
+rf = RandomForestClassifier()
+best_model = rf
 best_model.fit(x_train, y_train)
 y_pred = best_model.predict(x_test)
 print(f"Best Model Accuracy Score on Test Set: {accuracy_score(y_test, y_pred)}")
+print(f"Best Model Precision Score on Test Set: {precision_score(y_test, y_pred)}")
 print(y_pred)
 
 
@@ -137,49 +124,3 @@ cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 plt.show()
-
-# levels_dict = {
-#         'Low': 1,
-#         'Medium': 2,
-#         'High': 0
-#     }
-
-# gender_dict = {
-#         'Male': 1,
-#         'Female': 0 
-#     }
-# desc_dict = {
-#         'Yes': 1,
-#         'No': 0
-#     }
-
-
-# age = 
-# gender = 
-# exercise = 
-# smoking = 
-# fhd =
-# diabetes = 
-# bmi = 
-# hbp = 
-# alcohol =
-# stress =
-# sleep =
-# sugar = 
-
-# gender = gender_dict[gender]
-
-# smoking = desc_dict[smoking]
-# fhd = desc_dict[fhd]
-# diabetes = desc_dict[diabetes]
-# hbp = desc_dict[hbp]
-
-
-# exercise = levels_dict[exercise]
-# alcohol = levels_dict[alcohol]
-# stress = levels_dict[stress]
-# sugar = levels_dict[sugar]
-
-# Save the data to use in the software tool
-with open('best_model.pkl', 'wb') as f:
-    pickle.dump(svm, f)
