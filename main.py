@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
-heart_disease_data = pd.read_csv("HeartDiseasePredictor\heart.csv")
+heart_disease_data = pd.read_csv("heart.csv")
 
 predict = "hd"
 

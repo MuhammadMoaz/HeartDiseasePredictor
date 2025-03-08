@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request
 import pandas as pd
-import pickle
+from main import *
 
 app = Flask(__name__)
-
-# Load model
-model = pickle.load(open('best_model.pkl', 'rb'))
 
 @app.route('/')
 def home():
@@ -23,67 +20,77 @@ def calc_bmi():
 @app.route('/predict', methods=['POST'])
 def predict():
 
-    levels_dict = {
-        'Low': 1,
-        'Medium': 2,
-        'High': 0
+    sex_dict = {
+        'Male': 1,
+        'Female': 0
     }
 
-    gender_dict = {
-        'Male': 1,
-        'Female': 0 
+    cp_dict = {
+        "Typical Angina": 0,
+        "Atypical Angina": 1,
+        "Non--Anginal Pain": 2,
+        "Asymptotic" : 3
+    }    
+        
+    fbs_dict = {
+        "Yes": 1,
+        "No": 0
     }
-    desc_dict = {
-        'Yes': 1,
-        'No': 0
+
+    restecg_dict = {
+        "Normal": 0,
+        "Having ST-T wave abnormality": 1,
+        "left ventricular hyperthrophy" : 2
+    }
+
+    exang_dict = {
+        "Yes": 1,
+        "No": 0
+    }
+
+    slope_dict = {
+        "Upsloping": 0,
+        "Flat": 1,
+        "Downsloping": 2
+    }
+
+    thal_dict = {
+        "Normal": 1,
+        "Fixed Defect": 2,
+        "Reversible Defect": 3
     }
 
     # Get Values
-    age = request.form['Age']
-    gender = request.form['Gender']
-    exercise = request.form['Exercise Habits']
-    smoking = request.form['Smoking']
-    fhd = request.form['Family Heart Disease']
-    diabetes = request.form['Diabetes']
-    bmi = request.form['BMI']
-    hbp = request.form['High Blood Pressure']
-    alcohol = request.form['Alcohol Consumption']
-    stress = request.form['Stress Level']
-    sleep = request.form['Sleep Hours']
-    sugar = request.form['Sugar Consumption']
-
-    gender = gender_dict[gender]
-
-    smoking = desc_dict[smoking]
-    fhd = desc_dict[fhd]
-    diabetes = desc_dict[diabetes]
-    hbp = desc_dict[hbp]
-
-
-    exercise = levels_dict[exercise]
-    alcohol = levels_dict[alcohol]
-    stress = levels_dict[stress]
-    sugar = levels_dict[sugar]
+    age = request.form['age']
+    sex = request.form['sex']
+    cp = request.form['cp']
+    trestbps = request.form['trestbps']
+    chol = request.form['chol']
+    fbs = request.form['fbs']
+    restecg = request.form['restecg']
+    exang = request.form['exang']
+    oldpeak = request.form['oldpeak']
+    slope = request.form['slope']
+    ca = request.form['ca']
+    thal = request.form['thal']
     
-    data = pd.DataFrame({'Age': age, 
-                         'Gender': gender, 
-                         'Exercise Habits': exercise,
-                         'Smoking': smoking, 
-                         'Family Heart Disease': fhd,
-                         'Diabetes': diabetes,
-                         'BMI': bmi,
-                         'High Blood Pressure': hbp,
-                         'Alcohol Consumption': alcohol,
-                         'Stress Level': stress,
-                         'Sleep Hours': sleep,
-                         'Sugar Consumption': sugar}, index=[0])
 
-    prediction = f"Heart Disease Status: {model.predict(data)[0]}"
+    sex = sex_dict[sex]
+    cp = cp_dict[cp]
+    fbs = fbs_dict[fbs]
+    restecg = restecg_dict[restecg]
+    exang = exang_dict[exang]
+    slope = slope_dict[slope]
+    thal = thal_dict[thal]
+    
+    patient_info = (age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal)
 
-    if prediction == 1:
-            prediction = "true"
+    prediction =  best_model.predict([patient_info])
+
+    if prediction == [0]:
+        prediction = "low chance of heart diseas"
     else:
-        prediction = "false"
+        prediction = "high chance of heart disease"
 
     return render_template('index.html', prediction=prediction)
 
